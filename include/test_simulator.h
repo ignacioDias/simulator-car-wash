@@ -1,10 +1,17 @@
 #ifndef TEST_RANDOM_CHOICE_H
 #define TEST_RANDOM_CHOICE_H
 
-#include "simulator.h"
+#include <assert.h>
+#include "../include/simulator.h"
+#include "../include/queue.h"
 
-#define EMPTY_QUEUE (Queue*)malloc(sizeof(Queue))
+extern int recaudatedMoney;
 
-void testRandomChoice();
+void testOneClientUsesService();
+void testManyClientsUsingService();
+void testOnlyClientLeavesService();
+void testOneOfManyClientsLeavesService();
+void testCheckLeavingServices();
+void testRandomChoice(Client* clients[], int sizeClients);
 
 #endif

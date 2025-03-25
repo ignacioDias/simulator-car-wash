@@ -1,5 +1,9 @@
 {
     "files.associations": {
-        "test_random_choice.h": "c"
+        "test_random_choice.h": "c",
+        "test_simulator.h": "c",
+        "simulator.h": "c",
+        "queue.h": "c",
+        "assert.h": "c"
     }
 }
