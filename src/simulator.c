@@ -4,7 +4,7 @@ int time = 0;
 int recaudatedMoney = 0;
 
 int main() {
-    
+
     Client* clients[] = {
         &(Client){5, 0.05},
         &(Client){10, 0.05},
@@ -26,7 +26,7 @@ int main() {
     int servicesSize = 4;
 
     int nextArrival = 0;
-    while(time++ < TIME_IN_SECONDS) {
+    while(time++ < TIME_IN_MINUTES) {
         if(nextArrival-- == 0) {
             int indexOfSelectedClient = selectRandomElement(clientsSize, clients, sizeof(Client), offsetof(Client, probability));
             int indexOfSelectedService = selectRandomElement(servicesSize, services, sizeof(Service), offsetof(Service, probability));
@@ -36,15 +36,6 @@ int main() {
         checkLeavingServices(services, servicesSize);
     }
     return 0;
-}
-
-void checkLeavingServices(Service *services[], size_t sizeServices) {
-    for(int i = 0; i < sizeServices; i++) {
-        services[i]->currentClientLeavingTime -= 1;
-        if(services[i]->currentClientLeavingTime == 0) {
-            clientLeavesService(&(services[i]));
-        }
-    }
 }
 
 int selectRandomElement(int size, void* array, size_t structSize, size_t probabilityOffset) { //tamaño del array, el array de un tipo genérico, tamaño del tipo (struct) del array, la posición en bytes del campo probability dentro de la struct
@@ -61,30 +52,34 @@ int selectRandomElement(int size, void* array, size_t structSize, size_t probabi
     return size - 1;  // Solo para evitar errores, pero nunca debería llegar acá
 }
 
+void checkLeavingServices(Service *services[], size_t sizeServices) {
+    for(int i = 0; i < sizeServices; i++) {
+        services[i]->currentClientLeavingTime -= 1;
+        if(services[i]->currentClientLeavingTime == 0) {
+            clientLeavesService(&(services[i]));
+        }
+    }
+}
+
 void clientUsesService(Service **service, int clientTime) { 
     if((*service)->isUsed) {
         pushToQueue(clientTime, &(*service)->queue);
     } else {
         (*service)->isUsed = 1;
-        (*service)->currentClientLeavingTime = clientTime;
+        (*service)->currentClientLeavingTime = (*service)->time;
     }
 }
 
 int clientLeavesService(Service **service) { 
     if((*service)->isUsed == 0)
         return 0;
-        
     recaudatedMoney += (*service)->cost;
-
     if(isQueueEmpty((*service)->queue)) {
         (*service)->isUsed = 0;
         (*service)->currentClientLeavingTime = -1;
     } else {
-        (*service)->currentClientLeavingTime = popFromQueue(&(*service)->queue);
-        if((*service)->currentClientLeavingTime == -1) {
-            perror("error from queue\n");
-            exit(1);
-        }
+        popFromQueue(&(*service)->queue);
+        (*service)->currentClientLeavingTime = (*service)->time;
     }
     return 1;
 }

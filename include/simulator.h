@@ -8,7 +8,7 @@
 #include "queue.h"
 
 #define EMPTY_QUEUE (Queue*)malloc(sizeof(Queue))
-#define TIME_IN_SECONDS 180000 // 5 hours in minutes
+#define TIME_IN_MINUTES 900  // 5 hours in minutes
 
 typedef struct Ser {
     Queue *queue;
