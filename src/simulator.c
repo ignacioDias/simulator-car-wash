@@ -4,7 +4,6 @@ int time = 0;
 int reacudatedMoney = 0;
 
 int main() {
-
     Client* clients[] = {
         &(Client){5, 0.05},
         &(Client){10, 0.05},
@@ -14,8 +13,7 @@ int main() {
         &(Client){30, 0.20},
         &(Client){35, 0.15},
         &(Client){40, 0.05}
-    };
-    
+    };  
     int clientSize = 8;
 
     Service* services[] = {
@@ -27,21 +25,15 @@ int main() {
     int servicesSize = 4;
 
     int nextArrival = 0;
-
     while(time++ < TIME_IN_SECONDS) {
         if(nextArrival-- == 0) {
-            
             int indexOfSelectedClient = selectRandomElement(clientSize, clients, sizeof(Client), offsetof(Client, probability));
             int indexOfSelectedService = selectRandomElement(servicesSize, services, sizeof(Service), offsetof(Service, probability));
-
             nextArrival = clients[indexOfSelectedClient]->time;
-
             clientUsesService(&(services[indexOfSelectedService]), clients[indexOfSelectedClient]->time);
-
         }
         checkLeavingServices(services, servicesSize);
     }
-
     return 0;
 }
 
